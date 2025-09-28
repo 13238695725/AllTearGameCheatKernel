@@ -1,0 +1,63 @@
+//格式：功能名称#所在Class名称#类名
+
+骨骼
+MeshOffset#Class: Character.Pawn.Actor.Object#Mesh
+MeshAddress#Class: SkeletalMesh.Object#BodySetup
+BoneAddress#Class: RuntimeMeshComponent.MeshComponent.PrimitiveComponent.SceneComponent.ActorComponent.Object#BodySetup
+BoneAddress2#Class: StaticMeshComponent.MeshComponent.PrimitiveComponent.SceneComponent.ActorComponent.Object#StaticMesh;
+
+坐标指针1#Class: Actor.Object#RootComponent;
+人物高度#Class: CommonBtnComponent.ActorComponent.Object#LastCheckLocation;
+
+向量 车辆向量判断乘车+向量
+判断乘车#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#CurrentVehicle;
+全局向量#Class: Actor.Object#ReplicatedMovement;
+
+自身或对象+
+玩家名字#Class: UAECharacter.Character.Pawn.Actor.Object#PlayerName;
+是否真人#Class: UAECharacter.Character.Pawn.Actor.Object#IsPossessed;
+是否人机#Class: UAECharacter.Character.Pawn.Actor.Object#bIsAI;
+队伍ID#Class: UAECharacter.Character.Pawn.Actor.Object#TeamID;
+当前血量#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#Health
+最大血量#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#HealthMax;
+动作PoseState#Class: STExtraBaseCharacter.STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#PoseState;
+动作#Class: STExtraPlayerState.UAEPlayerState.PlayerState.Info.Actor.Object#TeamMatePlayerStateList;
+特征 人物最大速度#Class: STExtraBaseCharacter.STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#HighWalkSpeed;
+
+开火#Class: STExtraBaseCharacter.STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#bIsWeaponFiring;
+开镜#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#bIsGunADS;
+
+默认速度值#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#DefaultSpeedValue;
+当前速度值#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#SpeedValue;
+
+子弹速度自身+指针1
+指针1#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#CurrentUsingWeaponSafety;
+指针2#Class: STExtraWeapon.Actor.Object#WeaponEntityComp;
+子弹速度#Class: ShootWeaponEntity.WeaponEntity.WeaponLogicBaseComponent.ActorComponent.Object#BulletFireSpeed;
+
+武器
+武器管理组件指针1#Class: STExtraBaseCharacter.STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#WeaponManagerComponent;
+当前武器指针2#Class: WeaponManagerComponent.ActorComponent.Object#CurrentWeaponReplicated;
+当前子弹数量#Class: STExtraShootWeapon.STExtraWeapon.Actor.Object#CurBulletNumInClip;
+最大子弹数量#Class: STExtraShootWeapon.STExtraWeapon.Actor.Object#CurMaxBulletNumInOneClip;
+射击模式#Class: STExtraShootWeapon.STExtraWeapon.Actor.Object#ShootMode;
+武器后坐力#Class: ShootWeaponEntity.WeaponEntity.WeaponLogicBaseComponent.ActorComponent.Object#AccessoriesVRecoilFactor
+
+载具系统
+载具血量#Class: VehicleCommonComponent.VehicleComponent.ActorComponent.Object#HP
+载具油量#Class: VehicleCommonComponent.VehicleComponent.ActorComponent.Object#Fuel
+载具最大血量#Class: VehicleCommonComponent.VehicleComponent.ActorComponent.Object#HPMax
+载具最大油量#Class: VehicleCommonComponent.VehicleComponent.ActorComponent.Object#FuelMax
+
+玩家状态
+死亡状态#Class: STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#bDead
+倒地状态#Class: STExtraBaseCharacter.STExtraCharacter.UAECharacter.Character.Pawn.Actor.Object#NearDeatchComponent
+
+盒内物资
+物资盒子#Class: PlayerTombBox.Actor.Object#BoxPickupWrapperActor
+物资列表#Class: PickUpListWrapperActor.PickUpWrapperActor.UAENetActor.Actor.Object#PickUpDataList
+
+相机
+相机管理器#Class: PlayerController.Controller.Actor.Object#PlayerCameraManager
+视角目标#Class: PlayerCameraManager.Actor.Object#ViewTarget
+控制旋转#Class: Controller.Actor.Object#ControlRotation

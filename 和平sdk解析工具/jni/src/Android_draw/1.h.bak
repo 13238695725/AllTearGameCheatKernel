@@ -1,0 +1,209 @@
+// 添加新的头文件
+#include <unordered_map>
+#include <algorithm>
+#include <sstream>
+
+// 添加全局变量
+struct ClassInfo {
+    std::unordered_map<std::string, std::string> members;
+};
+std::unordered_map<std::string, ClassInfo> classDatabase;
+std::string sdkParseResult;
+bool showSdkParserWindow = false;
+char sdkFilePath[256] = "";
+char ruleFilePath[256] = "";
+char outputFilePath[256] = "result.txt";
+bool isParsing = false;
+float parseProgress = 0.0f;
+
+// 辅助函数：去除字符串首尾空白
+std::string trim(const std::string& str) {
+    size_t first = str.find_first_not_of(" \t\n\r");
+    if (std::string::npos == first) return "";
+    size_t last = str.find_last_not_of(" \t\n\r");
+    return str.substr(first, (last - first + 1));
+}
+
+// 构建类数据库
+void BuildClassDatabase(const std::string& sdkContent) {
+    classDatabase.clear();
+    std::istringstream iss(sdkContent);
+    std::string line;
+    std::string currentClass;
+    
+    while (std::getline(iss, line)) {
+        line = trim(line);
+        
+        // 检测类定义行
+        if (line.find("Class: ") == 0) {
+            currentClass = trim(line.substr(7));
+            continue;
+        }
+        
+        // 解析成员变量
+        if (!currentClass.empty() && line.find("Offset: 0x") != std::string::npos) {
+            size_t typeEnd = line.find_first_of(" \t");
+            if (typeEnd == std::string::npos) continue;
+            
+            std::string type = line.substr(0, typeEnd);
+            std::string name = line.substr(typeEnd + 1);
+            
+            size_t nameEnd = name.find_first_of(" \t;");
+            if (nameEnd != std::string::npos) {
+                name = name.substr(0, nameEnd);
+            }
+            
+            size_t offsetPos = line.find("Offset: 0x");
+            if (offsetPos != std::string::npos) {
+                std::string offset = line.substr(offsetPos + 8);
+                offset = trim(offset.substr(0, offset.find_first_of(" \t\n\r")));
+                
+                classDatabase[currentClass].members[name] = offset;
+            }
+        }
+    }
+}
+
+// 处理规则文件
+std::string ProcessRules(const std::string& ruleContent) {
+    std::ostringstream result;
+    std::istringstream iss(ruleContent);
+    std::string line;
+    
+    while (std::getline(iss, line)) {
+        line = trim(line);
+        
+        // 跳过注释和空行
+        if (line.empty() || line.find("//") == 0) {
+            result << line << "\n";
+            continue;
+        }
+        
+        // 解析规则行
+        size_t pos1 = line.find('#');
+        size_t pos2 = line.find('#', pos1 + 1);
+        
+        if (pos1 != std::string::npos && pos2 != std::string::npos) {
+            std::string funcName = trim(line.substr(0, pos1));
+            std::string className = trim(line.substr(pos1 + 1, pos2 - pos1 - 1));
+            std::string memberName = trim(line.substr(pos2 + 1));
+            
+            // 清理类名和成员名
+            className = trim(className);
+            if (className.find("Class: ") == 0) {
+                className = className.substr(7);
+            }
+            memberName = trim(memberName);
+            if (memberName.back() == ';') {
+                memberName.pop_back();
+            }
+            
+            // 查找偏移量
+            auto classIt = classDatabase.find(className);
+            if (classIt != classDatabase.end()) {
+                auto memberIt = classIt->second.members.find(memberName);
+                if (memberIt != classIt->second.members.end()) {
+                    result << funcName << "\t\t" << memberIt->second << "\n";
+                    continue;
+                }
+            }
+        }
+        
+        // 未匹配的规则原样输出
+        result << line << "\n";
+    }
+    
+    return result.str();
+}
+
+// 在Layout_tick_UI中添加SDK解析器窗口
+void Layout_tick_UI(bool *main_thread_flag) {
+    // ... 保持原有代码不变 ...
+    
+    // 添加SDK解析器按钮
+    if (ImGui::Button("SDK解析器")) {
+        showSdkParserWindow = true;
+    }
+    
+    // SDK解析器窗口
+    if (showSdkParserWindow) {
+        ImGui::Begin("SDK解析器", &showSdkParserWindow, ImGuiWindowFlags_AlwaysAutoResize);
+        
+        // 文件选择
+        ImGui::InputText("SDK文件", sdkFilePath, IM_ARRAYSIZE(sdkFilePath));
+        ImGui::InputText("规则文件", ruleFilePath, IM_ARRAYSIZE(ruleFilePath));
+        ImGui::InputText("输出文件", outputFilePath, IM_ARRAYSIZE(outputFilePath));
+        
+        // 解析按钮
+        if (ImGui::Button("解析") && !isParsing) {
+            isParsing = true;
+            parseProgress = 0.0f;
+            
+            // 异步解析（简化示例，实际应用中可能需要线程）
+            std::thread([&]() {
+                try {
+                    // 读取SDK文件
+                    std::ifstream sdkFile(sdkFilePath);
+                    std::string sdkContent((std::istreambuf_iterator<char>(sdkFile)), 
+                                         std::istreambuf_iterator<char>());
+                    parseProgress = 0.3f;
+                    
+                    // 构建数据库
+                    BuildClassDatabase(sdkContent);
+                    parseProgress = 0.6f;
+                    
+                    // 读取规则文件
+                    std::ifstream ruleFile(ruleFilePath);
+                    std::string ruleContent((std::istreambuf_iterator<char>(ruleFile)), 
+                                          std::istreambuf_iterator<char>());
+                    parseProgress = 0.8f;
+                    
+                    // 处理规则
+                    sdkParseResult = ProcessRules(ruleContent);
+                    parseProgress = 1.0f;
+                    
+                    // 保存结果
+                    std::ofstream outFile(outputFilePath);
+                    outFile << sdkParseResult;
+                } catch (...) {
+                    sdkParseResult = "解析过程中发生错误";
+                }
+                isParsing = false;
+            }).detach();
+        }
+        
+        // 显示进度
+        if (isParsing) {
+            ImGui::SameLine();
+            ImGui::ProgressBar(parseProgress, ImVec2(100, 20));
+        }
+        
+        // 显示结果
+        if (!sdkParseResult.empty()) {
+            ImGui::Separator();
+            ImGui::Text("解析结果:");
+            
+            ImGui::BeginChild("Result", ImVec2(600, 400), true);
+            ImGui::TextUnformatted(sdkParseResult.c_str());
+            ImGui::EndChild();
+            
+            if (ImGui::Button("保存结果")) {
+                std::ofstream outFile(outputFilePath);
+                outFile << sdkParseResult;
+                ImGui::OpenPopup("保存成功");
+            }
+            
+            if (ImGui::BeginPopupModal("保存成功", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+                ImGui::Text("结果已保存到: %s", outputFilePath);
+                if (ImGui::Button("确定")) {
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::EndPopup();
+            }
+        }
+        
+        ImGui::End();
+    }
+    
+    // ... 保持原有代码不变 ...
+}
