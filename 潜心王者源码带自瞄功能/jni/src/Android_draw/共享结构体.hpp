@@ -1,0 +1,39 @@
+//共享头文件
+#include <string.h>
+#include <iostream>
+#include <fstream>
+#include <sstream>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <unistd.h>
+#include <ctype.h>
+#include <sys/socket.h>
+#include <random>
+#include <random>
+#include <iostream>
+
+char imeiqianxinqianxin[100] = "";//leixin666  全局变量
+
+
+std::string 设备id;
+std::string gameDataStr ;
+    std::string character ;// "不能动";
+    std::string creeps ;
+    std::string soldier ;
+
+void XF心共享房间()
+{
+
+
+srand((unsigned int)time(NULL));  // 初始化随机数种子
+
+    int num = rand() % 10000 + 1;  // 生成 1 到 10000 之间的随机数
+
+  
+    sprintf(imeiqianxinqianxin, "qx%06d", num);  // 将数字转换为字符串并存储在  中
+    printf("\033[29;1m");	// 绿色
+
+printf("\033[1;32m自动生成的 (卡密)XF共享网页房间号是: %s\n\033[0m", imeiqianxinqianxin);
+}
+

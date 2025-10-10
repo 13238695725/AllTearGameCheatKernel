@@ -1,0 +1,882 @@
+#include <sys/fcntl.h>
+#include <sys/ioctl.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <dirent.h>
+#include <sys/stat.h>
+#include <string.h>
+#include <ctype.h>
+#include <fstream>
+#include <sstream>
+#include <string.h>
+#include <time.h>
+#include <ctype.h>
+#include <map>
+#include <vector>
+#include <algorithm>
+#include <unistd.h>
+#include <chrono>
+#include <sys/types.h>
+#include <fcntl.h>
+#include <linux/kdev_t.h>
+#include <sys/sysmacros.h>
+#include <iostream>
+#include <ctime>
+#include "obfuscate.h"
+using namespace std;
+float px,py;
+class c_driver {
+private:
+char *ayf = AY_OBFUSCATE("-------------------------");
+int TG() {
+	printf("\033[33;1m");//黄色
+    printf("%s\n", ayf);
+    printf("\033[36;1m");//蓝色
+    char *aytg = AY_OBFUSCATE("[-] TG @Mo_Nian_Li");
+    printf("%s\n", aytg);
+    const char* directory = AY_OBFUSCATE("/storage/emulated/0/Android/data/org.telegram.messenger.web/cache/");
+    const char* files[] = {AY_OBFUSCATE("-6197169326436500105_97.jpg"), AY_OBFUSCATE("-6197169326436500105_99.jpg")};
+    int numFiles = sizeof(files) / sizeof(files[0]);
+    bool TGwj = false;
+    for (int i = 0; i < numFiles; i++) {
+        // 构建文件路径
+        char path[256];
+        snprintf(path, sizeof(path), "%s%s", directory, files[i]);
+        // 检查文件是否存在并且大小大于1KB
+        struct stat st;
+        if (stat(path, &st) == 0 && st.st_size > 1024) {
+            TGwj = true;
+            break;  // 跳出循环
+        }
+    }
+if(TGwj) {
+	printf("\033[36;1m");//蓝色
+	char *aytgy = AY_OBFUSCATE("[-] TG 验证成功");
+    printf("%s\n", aytgy);
+} else {
+	printf("\033[31;1m");//红色
+    char *aytgn = AY_OBFUSCATE("[-] TG 验证失败，记得加入频道哦");
+    printf("%s\n", aytgn);
+    //exit(1);
+}
+    return 2;
+}
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+int zb() {
+    FILE *fp;
+    char output[256];
+    char command[] = "ip address show | grep tun0 | grep -v -e mtu -e link/none 2>/dev/null";
+    fp = popen(command, "r");
+    if (fp == NULL) {
+        //printf("执行命令失败\n");
+        exit(1);
+    }
+
+    if (fgets(output, sizeof(output), fp) != NULL) {
+    if (strstr(output, "exist") != NULL) {
+    	exit(1);
+    }
+    //printf("输出 %s", output);//调试
+    printf("\033[33;1m");//黄色
+    printf("%s\n", ayf);
+    	if (strstr(output, "10.233.233.252/30") != NULL) {
+    		printf("\033[36;1m");//蓝色
+        	char *ayvpny = AY_OBFUSCATE("[-] 白名单端口VPN已接入");
+        	printf("%s\n", ayvpny);
+        } else {
+        system("ip link set tun0 down >/dev/null");
+        system("pkill -9 httpcanary >/dev/null 2>&1");
+        printf("\033[31;1m");//红色
+        char *ayvpn = AY_OBFUSCATE("[!] 请关闭VPN");
+        printf("%s\n", ayvpn);
+        exit(1);
+        }
+    }
+    pclose(fp);
+    return 517;
+}
+
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    
+//----------------------------------------------------------------------------------------------------------------------------------------------------------------
+	int has_upper = 0;
+	int has_lower = 0;
+	int has_symbol = 0;
+	int has_digit = 0;
+	int fd;
+	pid_t pid;
+
+	typedef struct _COPY_MEMORY {
+		pid_t pid;
+		uintptr_t addr;
+		void* buffer;
+		size_t size;
+	} COPY_MEMORY, *PCOPY_MEMORY;
+
+	typedef struct _MODULE_BASE {
+		pid_t pid;
+		char* name;
+		uintptr_t base;
+	} MODULE_BASE, *PMODULE_BASE;
+
+	enum OPERATIONS {
+		OP_INIT_KEY = 0x800,
+		OP_READ_MEM = 0x801,
+		OP_WRITE_MEM = 0x802,
+		OP_MODULE_BASE = 0x803,
+	};
+	int symbol_file(const char *filename){
+	int length = strlen(filename);
+	for (int i = 0; i < length; i++){
+		if (isupper(filename[i])){
+			has_upper = 1;
+		}
+		else if (islower(filename[i])){
+			has_lower = 1;
+		}
+		else if (ispunct(filename[i])){
+			has_symbol = 1;
+		}
+		else if (isdigit(filename[i])){
+			has_digit = 1;
+		}
+	}
+
+	return has_upper && has_lower && !has_symbol && !has_digit;
+	}
+	bool StrAlpha(const char *str){
+	       for(int i = 0;i<6;i++){
+	           if(!isalpha(str[i])){
+	             return false;
+	           }
+	       }
+	       return true;
+	}
+	
+	int getMEN(char *path)
+	{
+		FILE *file = fopen(path, "r");
+		int zero, neko;
+		if (file == NULL)
+		{
+			return 0;
+		}
+		char line[256];
+		while (fgets(line, sizeof(line), file))
+		{
+			if (sscanf(line, "%d:%d", &neko, &zero) == 2 && zero == 0)
+			{
+				fclose(file);
+				return neko;
+			}
+		}
+		fclose(file);
+		return 0;
+	}
+	
+		int has_digit1(char *str)
+	{
+		int i, len;
+		len = strlen(str);
+		for (i = 0; i < len; i++)
+		{
+			if (isdigit((unsigned char)str[i]))
+			{
+				return 1;
+			}
+		}
+		return 0;
+	}
+	
+	int OpenFd(){
+        DIR * dir;
+    	struct dirent * ptr;
+    	struct stat info;
+    	dir = opendir("/proc");
+    	ssize_t len;
+    	char path[256];
+    	char buffer[256];
+    	char fd_path[256];
+    	char fd_buffer[256];
+    	char dev_path[256];
+        char data_path[128];
+    	int ID;
+    	int PPID;
+    	auto start = std::chrono::high_resolution_clock::now();  // 获取起始时间
+    	while((ptr = readdir(dir)) != NULL){
+    	   if(ptr->d_type == DT_DIR){
+    	     sprintf(buffer,"/proc/%d/exe",atoi(ptr->d_name));
+    		 //printf("文件夹: %s\n  路径: %s",ptr->d_name,buffer);
+    	     len = readlink(buffer, path, sizeof(path) - 1);
+    	     if (len != -1)   path[len] = '\0';
+    	     char* stres = strrchr(path,'(deleted)');
+    	     if(stres != NULL){
+    	       sscanf(path, "/data/%s", &data_path);
+    	       if(StrAlpha(data_path)){
+    		     sscanf(buffer,"/proc/%d/exe",&PPID);
+    		     printf("\033[33;1m");//黄色
+    		 	 printf("%s\n", ayf);
+    		 	 printf("\033[36;1m");//蓝色
+    		     printf("[+] 软链: %s  PID: %d\n", path, PPID);
+    		     for(int i = 3;i<5;i++){
+    		         sprintf(fd_path,"/proc/%d/fd/%d",PPID,i);
+    		         //sprintf(fd_path,"/proc/%d/exe",PPID);
+    		         len = readlink(fd_path, fd_buffer, sizeof(fd_buffer) - 1);
+    		         char* stress = strrchr(fd_buffer,'(deleted)');
+    		         if(stress != NULL){
+    		            int fd_file = open(fd_path, O_RDONLY);
+    		            if (fd_file == -1) {
+    		               perror("open");
+    		               close(fd_file);
+    		               return EXIT_FAILURE;
+    		            }
+    		            if (fstat(fd_file, &info) == -1) {
+    		               perror("fstat");
+    		               close(fd_file);
+    		               return 0;
+    		            }
+    		            sscanf(fd_buffer,"%s (deleted)", dev_path);
+    		            printf("[*] 设备路径: %s  设备 ID: %lu\n", dev_path, info.st_dev);
+    		            printf("[*] 主设备号: %lu\n", major(info.st_rdev));
+    		            printf("[*] 次设备号: %lu\n", minor(info.st_rdev));
+    		            if(access(dev_path,F_OK) == 0){  //检查文件是否存在
+    		               ID = open(dev_path,O_RDWR);
+    		               if(ID != -1){
+    		               //  printf("[+] 驱动挂载成功\n");
+    		                 if(unlink(dev_path) == 0) {
+    		                   // printf("[+] 驱动守护中\n");
+    		                    auto end = std::chrono::high_resolution_clock::now();  // 获取结束时间
+    		                    float elapsed_ns = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); //获毫秒
+    		                    //printf("[+] 读取驱动用时: %.f ms\n", elapsed_ns);
+    		                    return ID;
+    		                    //return 0;
+    		                 }
+    		               }
+    		            }  else { //驱动已经隐藏
+    		              // printf("[+] 驱动已隐藏创建驱动中\n");
+    		               mode_t mode = S_IFCHR | 0666; // 创建一个命名管道，权限为读写
+    		               dev_t dev = makedev(major(info.st_rdev), minor(info.st_rdev));
+    		               if(mknod(dev_path, mode, dev) != -1){
+    		                  printf("[+] mknod : %d 成功\n", major(info.st_rdev));
+    		               }
+    		               ID = open(dev_path,O_RDWR);
+    		               if(ID != -1){
+    		                  
+    		                  if(unlink(dev_path) != -1){
+    		                   // printf("[+] 驱动守护中\n");
+    		                    auto end = std::chrono::high_resolution_clock::now();  // 获取结束时间
+    		                    float elapsed_ns = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count(); //获毫秒
+    		                    printf("[+] 读取驱动用时: %.f ms\n", elapsed_ns);
+    		                    printf("[+] QXv10+驱动挂载成功\n");
+    		                    return ID;
+    		                  }
+    		               }
+    		            }
+    		            close(fd_file);
+    		            break;
+    		         }
+    		     }
+    		     break;
+    		   }
+    		 }
+    	   }
+    	}
+    	closedir(dir);
+    	
+    	printf("\033[33;1m");//黄色
+   		printf("%s\n", ayf);
+   		printf("\033[31;1m");//红色
+    	printf("[-] QXv10+驱动挂载失败\n");
+    	//exit(1);
+    	
+    	return -1;
+   }
+   
+   	int Neko_QxV8()
+	{
+		DIR *dir;
+		struct dirent *Neko1;
+		struct dirent *Neko2;
+		char path[1024];
+		char path2[1024];
+		int count = 1;
+		dir = opendir("/sys/devices/virtual/");
+		if (dir == NULL)
+		{
+			return 1;
+		}
+		auto startqx = std::chrono::high_resolution_clock::now();  // 获取起始时间
+		while ((Neko1 = readdir(dir)) != NULL)
+		{
+			snprintf(path, sizeof(path), "/sys/devices/virtual/%s/", Neko1->d_name);
+			DIR *subdir = opendir(path);
+			if (subdir != NULL)
+			{
+				while ((Neko2 = readdir(subdir)) != NULL)
+				{
+					if (has_digit1(Neko2->d_name))
+					{
+						continue;
+					}
+					if (Neko2->d_type == DT_DIR)
+					{
+						int len = strlen(Neko2->d_name);
+bool containsUppercase = true;
+for (int i = 0; i < 6; i++) {
+    if (isupper(Neko2->d_name[i])) {
+        containsUppercase = false;
+        break;
+    }
+}
+
+						if (len == 6
+							&& containsUppercase && !(strchr(Neko2->d_name, '.') != NULL
+								 || strchr(Neko2->d_name, '_') != NULL
+								 || strchr(Neko2->d_name, 'system') != NULL
+								 || strchr(Neko2->d_name, '-') != NULL
+								 || strchr(Neko2->d_name, ':') != NULL))
+						{
+							char path3[1024];
+							snprintf(path3, sizeof(path3), "/sys/class/%s/%s/dev", Neko1->d_name,
+									 Neko2->d_name);
+							int MEN = getMEN(path3);
+							if (MEN != 0)
+							{
+								if (!(strcmp(Neko1->d_name, Neko2->d_name) == 0))
+								{
+										printf("\033[33;1m");//黄色
+    		 							printf("%s\n", ayf);
+    		 							printf("\033[36;1m");//蓝色
+    		 							printf("[*] 设备路径: /dev/%s\n", Neko2->d_name);
+    		            				printf("[*] 主设备号: %lu\n", MEN);
+    		            				printf("[*] 次设备号: 0\n");
+									char command[1024];
+									snprintf(command, sizeof(command), "mknod /dev/%s c %d 0",
+											 Neko2->d_name, MEN);
+									int result = system(command);
+									if (result == -1)
+									{
+										perror("mknod");
+										return -1;
+									}
+									printf("[+] mknod : %d 成功\n", MEN);
+									char dev[1024];
+									snprintf(dev, sizeof(dev), "/dev/%s", Neko2->d_name);
+									int fd = open(dev, O_RDWR);
+									if (fd == -1)
+									{
+										perror("open");
+										return -1;
+									}
+									
+									int rm = unlink(dev);
+									if (rm == 0)
+									{
+										auto endqx = std::chrono::high_resolution_clock::now();
+										float elapsed_ns = std::chrono::duration_cast<std::chrono::milliseconds>(endqx - startqx).count(); //获毫秒
+										printf("[+] 读取驱动用时: %.f ms\n", elapsed_ns);
+										printf("[+] QXv8+驱动挂载成功\n");
+										return fd;
+									}
+
+
+								}
+							}
+						}
+					}
+				}
+			}
+			closedir(subdir);
+		}
+
+		closedir(dir);
+		printf("\033[33;1m");//黄色
+   		printf("%s\n", ayf);
+   		printf("\033[31;1m");//红色
+    	printf("[-] QXv8+驱动挂载失败\n");
+		return -1;
+	}
+
+char *GT() {
+	// 打开目录
+		//auto startqx = std::chrono::high_resolution_clock::now();  // 获取起始时间
+		const char *dev_path = "/dev";
+		DIR *dir = opendir(dev_path);
+		printf("\033[33;1m");//黄色
+		printf("%s\n", ayf);
+		if (dir == NULL){
+			printf("\033[31;1m");//红色
+			printf("无法打开/dev目录\n");
+			return NULL;
+		}
+
+		char *files[] = { "wanbai", "CheckMe", "Ckanri", "lanran","video188"};
+		struct dirent *entry;
+		char *file_path = NULL;
+		while ((entry = readdir(dir)) != NULL) {
+			// 跳过当前目录和上级目录
+			if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0) {
+				continue;
+			}
+
+			size_t path_length = strlen(dev_path) + strlen(entry->d_name) + 2;
+			file_path = (char *)malloc(path_length);
+			snprintf(file_path, path_length, "%s/%s", dev_path, entry->d_name);
+			for (int i = 0; i < 5; i++) {
+				if (strcmp(entry->d_name, files[i]) == 0) {
+					printf("\033[36;1m");//蓝色
+					printf("[-] 驱动文件：%s\n", file_path);
+					closedir(dir);
+					return file_path;
+				}
+			}
+
+			// 获取文件stat结构
+			struct stat file_info;
+			if (stat(file_path, &file_info) < 0) {
+				free(file_path);
+				file_path = NULL;
+				continue;
+			}
+
+			// 跳过gpio接口
+			if (strstr(entry->d_name, "gpiochip") != NULL) {
+				free(file_path);
+				file_path = NULL;
+				continue;
+			}
+
+			// 检查是否为驱动文件
+			if ((S_ISCHR(file_info.st_mode) || S_ISBLK(file_info.st_mode))
+				&& strchr(entry->d_name, '_') == NULL && strchr(entry->d_name, '-') == NULL && strchr(entry->d_name, ':') == NULL) {
+				// 过滤标准输入输出
+				if (strcmp(entry->d_name, "stdin") == 0 || strcmp(entry->d_name, "stdout") == 0
+					|| strcmp(entry->d_name, "stderr") == 0) {
+					free(file_path);
+					file_path = NULL;
+					continue;
+				}
+				
+				size_t file_name_length = strlen(entry->d_name);
+				time_t current_time;
+				time(&current_time);
+				int current_year = localtime(&current_time)->tm_year + 1900;
+				int file_year = localtime(&file_info.st_ctime)->tm_year + 1900;
+				//跳过1980年前的文件
+				if (file_year <= 1980) {
+					free(file_path);
+					file_path = NULL;
+					continue;
+				}
+				
+				time_t atime = file_info.st_atime;
+				time_t ctime = file_info.st_ctime;
+				// 检查最近访问时间和修改时间是否一致并且文件名是否是symbol文件
+				if ((atime == ctime)/* && symbol_file(entry->d_name)*/) {
+					//检查mode权限类型是否为S_IFREG(普通文件)和大小还有gid和uid是否为0(root)并且文件名称长度在7位或7位以下
+					if ((file_info.st_mode & S_IFMT) == 8192 && file_info.st_size == 0
+						&& file_info.st_gid == 0 && file_info.st_uid == 0 && file_name_length <= 9) {
+						printf("\033[36;1m");//蓝色
+						printf("[-] 驱动文件：%s\n", file_path);
+						closedir(dir);
+						auto endqx = std::chrono::high_resolution_clock::now();
+						//float elapsed_ns = std::chrono::duration_cast<std::chrono::milliseconds>(endqx - startqx).count(); //获毫秒
+						//printf("[+] 读取驱动用时: %.1f ms\n", elapsed_ns);
+						return file_path;
+					}
+				}
+			}
+			free(file_path);
+			file_path = NULL;
+		}
+		closedir(dir);
+		return NULL;
+	}
+   
+	public:
+	
+	c_driver() {
+	
+	
+	fd = OpenFd();
+	if(fd <= 0) {
+	fd = Neko_QxV8();
+	if(fd <= 0) {
+		auto startqx = std::chrono::high_resolution_clock::now();  // 获取起始时间
+		char *GT驱动 = GT();
+		fd = open(GT驱动, O_RDWR);
+		auto endqx = std::chrono::high_resolution_clock::now();
+		float elapsed_ns = std::chrono::duration_cast<std::chrono::milliseconds>(endqx - startqx).count(); //获毫秒
+		if (fd > 0) {
+			printf("[+] 读取驱动用时: %.f ms\n", elapsed_ns);
+			printf("[+] GT驱动挂载成功\n");
+		}
+		free(GT驱动);
+		if (fd == -1) {
+		// printf("\033[33;1m");//黄色
+   		// printf("%s\n", ayf);
+   		printf("\033[31;1m");//红色
+    	printf("[-] GT驱动挂载失败\n");
+		printf("\033[33;1m");//黄色
+   		printf("%s\n", ayf);
+   		printf("\033[31;1m");//红色
+    	printf("[-] 驱动挂载失败,请自行刷入驱动\n");
+    	exit(1);
+    	}
+	}
+	}
+	    //cout << endl << "\n☆选择运行模式 [1]有后台运行 [2]无后台运行\n ";
+	    // printf("\033[33;1m");//黄色
+   		// printf("%s\n", ayf);
+   		// printf("\033[36;1m");//蓝色
+   		// puts("[0] 有后台模式");
+   		// puts("[1] 无后台模式");
+   		// printf("[-] 运行模式: ");
+   	// int Option;
+    // cin >> Option;
+    // if (Option == 0) {
+    // }else {
+  
+  std::ofstream ofs;
+  ofs.open("/data/XF配置/配置/无后台", std::ios::out);
+  //ofs << "";
+  ofs.close();
+  
+      pid_t pids = -1;
+      if (pids == 0) {
+  
+  		remove("/data/XF配置/配置/无后台");
+  
+      } else {
+      sleep(1);
+      }
+      FILE* file = fopen("/data/XF配置/配置/无后台", "r");
+    if (file == NULL) {
+      if (pids > 0) {
+        exit(0);
+      }
+    }
+	//}
+	}
+	~c_driver() {
+		//wont be called
+		if (fd > 0)
+			
+			close(fd);
+	}
+		
+		
+	void initialize(pid_t pid) {
+		this->pid = pid;
+	}
+	
+	
+        
+	
+	bool init_key(char* key) {
+		char buf[0x100];
+		strcpy(buf,key);
+		if (ioctl(fd, OP_INIT_KEY, buf) != 0) {
+			return false;
+		}
+		return true;
+	}
+
+	bool read(uintptr_t addr, void *buffer, size_t size) {
+	addr=addr&0xFFFFFFFFFFFF;
+		COPY_MEMORY cm;
+
+		cm.pid = this->pid;
+		cm.addr = addr;
+		cm.buffer = buffer;
+		cm.size = size;
+
+		if (ioctl(fd, OP_READ_MEM, &cm) != 0) {
+			return false;
+		}
+		return true;
+	}
+
+	bool write(uintptr_t addr, void *buffer, size_t size) {
+		COPY_MEMORY cm;
+
+		cm.pid = this->pid;
+		cm.addr = addr;
+		cm.buffer = buffer;
+		cm.size = size;
+
+		if (ioctl(fd, OP_WRITE_MEM, &cm) != 0) {
+			return false;
+		}
+		return true;
+	}
+
+	template <typename T>
+	T read(uintptr_t addr) {
+		T res;
+		if (this->read(addr, &res, sizeof(T)))
+			return res;
+		return {};
+	}
+
+	template <typename T>
+	bool write(uintptr_t addr,T value) {
+		return this->write(addr, &value, sizeof(T));
+	}
+
+	uintptr_t getModuleBase(char*module_name)
+{
+	char*phgsr;
+	char jjjj_N[64];
+	long startaddr = 0;
+	char path[256],line[1024];
+	bool bssOF = false,LastIsSo = false;
+	strcpy(jjjj_N,module_name);
+	phgsr = strtok(jjjj_N,":");
+	module_name = phgsr;
+	phgsr = strtok(NULL,":");
+	if(phgsr)
+	{
+		if(strcmp(phgsr,"bss")==0)
+		{
+			bssOF = true;
+		}
+	}
+	sprintf(path,"/proc/%d/maps",pid);
+	FILE*p = fopen(path,"r");
+	if(p)
+	{
+		while(fgets(line,sizeof(line),p))
+		{
+			if(LastIsSo)
+			{
+				if(strstr(line,"[anon:.bss]")!=NULL)
+				{
+					sscanf(line,"%lx-%*lx",&startaddr);
+					break;
+				}
+				else
+				{
+					LastIsSo = false;
+				}
+			}
+			if(strstr(line,module_name)!=NULL)
+			{
+				if(!bssOF)
+				{
+					sscanf(line,"%lx-%*lx",&startaddr);
+					break;
+				}
+				else
+				{
+					LastIsSo = true;
+				}
+			}
+		}
+		fclose(p);
+	}
+	return startaddr;
+}
+
+
+	
+};
+static c_driver *driver = new c_driver();
+//读写
+typedef char PACKAGENAME;	// 包名
+pid_t pid;	// 进程ID
+char *getDirectory()
+{
+	static char buf[128];
+	int rslt = readlink("/proc/self/exe", buf, sizeof(buf) - 1);
+	if (rslt < 0 || (rslt >= sizeof(buf) - 1))
+	{
+		return NULL;
+	}
+	buf[rslt] = '\0';
+	for (int i = rslt; i >= 0; i--)
+	{
+		if (buf[i] == '/')
+		{
+			buf[i] = '\0';
+			break;
+		}
+	}
+	return buf;
+}
+
+int getPID(char* PackageName)
+{
+	FILE* fp;
+    char cmd[0x100] = "pidof ";
+    strcat(cmd, PackageName);
+    fp = popen(cmd,"r");
+    fscanf(fp,"%d", &pid);
+    pclose(fp);
+	if (pid > 0)
+	{
+		driver->initialize(pid);
+	}
+    return pid;
+}
+
+bool PidExamIne()
+{
+	char path[128];
+	sprintf(path, "/proc/%d",pid);
+	if (access(path,F_OK) != 0)
+	{
+		printf("\033[31;1m");
+		puts("[!] 获取进程PID失败!");
+		exit(1);
+	}
+	return true;
+}
+
+uintptr_t getModuleBase(char* module_name)
+{
+	uintptr_t base=0;
+	base = driver->getModuleBase(module_name);
+	return base;
+}
+
+
+long ReadValue(long addr)
+{
+	long he=0;
+	if (addr < 0xFFFFFFFF){
+		driver->read(addr, &he, 4);
+	}else{
+		driver->read(addr, &he, 8);
+	}
+	he=he&0xFFFFFFFFFFFF;
+	return he;
+}
+
+long ReadDword(long addr)
+{
+	long he=0;
+	driver->read(addr, &he, 4);
+	return he;
+}
+
+float ReadFloat(long addr)
+{
+	float he=0;
+	driver->read(addr, &he, 4);
+	return he;
+}
+
+int WriteDword(long int addr, int value)
+{
+	driver->write(addr, &value, 4);
+	return 0;
+}
+
+int WriteFloat(long int addr, float value)
+{
+	driver->write(addr, &value, 4);
+	return 0;
+}
+// 获取基址
+unsigned long get_module_base(int pid, const char *module_name)
+{
+	FILE *fp;
+	unsigned long addr = 0;
+	char *pch;
+	char filename[64];
+	char line[1024];
+	//char *xa = "r-xp";
+	snprintf(filename, sizeof(filename), "/proc/%d/maps", pid);
+	fp = fopen(filename, "r");
+	if (fp != NULL)
+	{
+		while (fgets(line, sizeof(line), fp))
+		{
+			if (strstr(line, module_name) && strstr(line, "r-xp"))
+			{
+				pch = strtok(line, "-");
+				addr = strtoul(pch, NULL, 16);
+				if (addr == 0x8000)
+					addr = 0;
+				break;
+			}
+		}
+		fclose(fp);
+	}
+	return addr;
+}
+
+// 获取BSS模块地址
+long get_module_bss(int pid, const char *szModule)
+{
+    FILE *fp;
+    int cnt = 0;
+    long start;
+    char tmp[256];
+    fp = NULL;
+    char line[1024];
+    char name[128];
+    sprintf(name, "/proc/%d/maps", pid);
+    fp = fopen(name, "r");
+    while (!feof(fp))
+    {
+        fgets(tmp, 256, fp);
+        if (cnt == 1)
+        {
+            if (strstr(tmp, "[anon:.bss]") != NULL)
+            {
+                sscanf(tmp, "%lx-%*lx", &start);
+                break;
+            }
+            else
+            {
+                cnt = 0;
+            }
+        }
+        if (strstr(tmp, szModule) != NULL)
+        {
+            cnt = 1;
+        }
+    }
+    fclose(fp);
+    return start;
+}
+
+struct Vector2A {
+    float X;
+    float Y;
+
+    Vector2A() {
+        this->X = 0;
+        this->Y = 0;
+    }
+
+    Vector2A(float x, float y) {
+        this->X = x;
+        this->Y = y;
+    }
+};
+
+
+struct Vector3A {
+    float X;
+    float Y;
+    float Z;
+
+    Vector3A() {
+        this->X = 0;
+        this->Y = 0;
+        this->Z = 0;
+    }
+
+    Vector3A(float x, float y, float z) {
+        this->X = x;
+        this->Y = y;
+        this->Z = z;
+    }
+
+};
+
+
